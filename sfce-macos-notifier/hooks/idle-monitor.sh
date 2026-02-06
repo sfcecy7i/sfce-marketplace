@@ -57,15 +57,21 @@ echo "$(date +%s)" > "$MONITOR_FILE"
             exit 0
         fi
 
-        # Calculate idle time
+        # Calculate idle time based on monitor start
         if [ -f "$TIMESTAMP_FILE" ]; then
             LAST_ACTIVITY=$(head -1 "$TIMESTAMP_FILE")
             MONITOR_START=$(head -1 "$MONITOR_FILE")
             CURRENT_TIME=$(date +%s)
 
-            # Use the earlier of: last activity or monitor start
-            ACTIVITY_START=$((LAST_ACTIVITY < MONITOR_START ? LAST_ACTIVITY : MONITOR_START))
-            IDLE_SECONDS=$((CURRENT_TIME - ACTIVITY_START))
+            # If timestamp was updated AFTER monitor started, user is active
+            if [ "$LAST_ACTIVITY" -gt "$MONITOR_START" ]; then
+                # User responded, stop monitoring
+                rm -f "$MONITOR_FILE"
+                exit 0
+            fi
+
+            # Calculate idle time from monitor start
+            IDLE_SECONDS=$((CURRENT_TIME - MONITOR_START))
             IDLE_MINUTES=$((IDLE_SECONDS / 60))
 
             # Check if timeout exceeded
