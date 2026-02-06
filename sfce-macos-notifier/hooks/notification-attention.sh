@@ -5,7 +5,8 @@
 # Read JSON input from stdin
 INPUT=$(cat)
 
-# Extract notification type
+# Extract session_id and notification type
+SESSION_ID=$(echo "$INPUT" | python3 -c "import sys, json; print(json.load(sys.stdin).get('session_id', 'unknown'))" 2>/dev/null || echo "unknown")
 NOTIFICATION_TYPE=$(echo "$INPUT" | python3 -c "import sys, json; print(json.load(sys.stdin).get('notification_type', 'unknown'))" 2>/dev/null || echo "unknown")
 
 # Check if system notifications are enabled
@@ -30,5 +31,10 @@ case "$NOTIFICATION_TYPE" in
         terminal-notifier -title "Claude Code" -message "👀 需要关注" -sound default
         ;;
 esac
+
+# Start idle monitor in background
+if [ -f "${CLAUDE_PLUGIN_ROOT}/hooks/idle-monitor.sh" ]; then
+    echo "$INPUT" | bash "${CLAUDE_PLUGIN_ROOT}/hooks/idle-monitor.sh"
+fi
 
 exit 0

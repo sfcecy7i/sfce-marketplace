@@ -1,5 +1,5 @@
 #!/bin/bash
-# UserPromptSubmit Hook: Update user activity timestamp
+# UserPromptSubmit Hook: Update user activity timestamp and stop idle monitor
 
 # Read JSON input from stdin
 INPUT=$(cat)
@@ -13,5 +13,9 @@ if [ -f "$TIMESTAMP_FILE" ]; then
     echo "$(date +%s)" > "$TIMESTAMP_FILE"
     echo "LAST_ACTIVITY: $(date)" >> "$TIMESTAMP_FILE"
 fi
+
+# Stop idle monitor (user is active again)
+MONITOR_FILE="/tmp/claude-monitor-${SESSION_ID}.txt"
+rm -f "$MONITOR_FILE"
 
 exit 0
