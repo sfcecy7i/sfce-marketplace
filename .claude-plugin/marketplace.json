@@ -1,0 +1,18 @@
+{
+  "name": "sfce-marketplace",
+  "owner": {
+    "name": "sfcecy7i"
+  },
+  "plugins": [
+    {
+      "name": "sfce-macos-notifier",
+      "source": "./sfce-macos-notifier",
+      "description": "MacOS system and email notifications for Claude Code",
+      "version": "1.0.0",
+      "author": {
+        "name": "sfcecy7i"
+      },
+      "keywords": ["notification", "macos", "email", "terminal-notifier"]
+    }
+  ]
+}

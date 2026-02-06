@@ -1,0 +1,31 @@
+{
+  "description": "Automatic notifications for long-running tasks and session completion",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Evaluate the Bash command that just completed:\n\n1. Check if it took longer than 10 seconds (check duration metadata)\n2. Check if it succeeded or failed (exit code)\n3. Determine the appropriate notification level:\n   - 'success' if command completed successfully and took >10 seconds\n   - 'error' if command failed\n   - 'info' for informational long-running commands\n\nBased on this evaluation, if the command took >10 seconds OR failed, decide whether to send notifications:\n- Read the notification configuration priority: .claude/sfce-macos-notifier.local.md (project), ~/.claude/sfce-macos-notifier.local.md (user), or ${CLAUDE_PLUGIN_ROOT}/skills/notification-integration/default-config.md\n- Check if 'enable_system_notification' is true (default: true)\n- Check if 'enable_email_notification' is true (default: false)\n- Check 'min_task_duration' setting (default: 10 seconds)\n\nIf notifications are enabled, send appropriate notification(s):\n- For system notifications: use terminal-notifier command\n- For email notifications: call the Python script\n\nInclude in notification:\n- Title: Brief summary (e.g., '构建完成', '命令失败')\n- Message: Command summary and result\n- Level: info/success/warning/error\n\nReport what notification actions were taken.",
+            "timeout": 30,
+            "model": "haiku"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check if a stop notification should be sent:\n\n1. Read notification configuration (priority: project, user, default)\n2. Check if 'enable_stop_notification' is true (if not defined, default to false)\n3. If enabled, send a brief notification that the Claude Code session has ended\n\nUse terminal-notifier for system notification if enabled.\n\nReport action taken.",
+            "timeout": 15,
+            "model": "haiku"
+          }
+        ]
+      }
+    ]
+  }
+}
