@@ -3,7 +3,6 @@
 
 # Read JSON input from stdin
 INPUT=$(cat)
-CLAUDE_PLUGIN_ROOT="$1"
 
 # Extract information using Python (more reliable than jq)
 COMMAND=$(echo "$INPUT" | python3 -c "import sys, json; print(json.load(sys.stdin).get('tool_input', {}).get('command', 'N/A'))" 2>/dev/null || echo "N/A")

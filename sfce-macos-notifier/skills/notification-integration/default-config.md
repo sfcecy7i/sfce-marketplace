@@ -41,6 +41,17 @@ min_task_duration: 10
 # When enabled, sends notification when Claude Code session ends
 enable_stop_notification: false
 
+# Away Mode & Idle Timeout (for smart email notifications)
+# ---------------------------------------------------------
+# Manual away mode: when true, always send email on session stop
+# Use this when you're leaving your computer and want email notifications
+away_mode: false
+
+# Idle timeout: send email if no user activity for this many minutes
+# Set to 0 to disable idle timeout checking
+# Default: 30 minutes
+idle_timeout_minutes: 30
+
 # Notification Levels
 # -------------------
 # info:    General informational messages
