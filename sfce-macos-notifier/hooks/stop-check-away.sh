@@ -74,9 +74,10 @@ if [ "$SEND_EMAIL" = "true" ]; then
     # Send email using Python script
     if [ -f "${CLAUDE_PLUGIN_ROOT}/skills/notification-integration/scripts/send-email.py" ]; then
         python3 "${CLAUDE_PLUGIN_ROOT}/skills/notification-integration/scripts/send-email.py" \
-            "Claude Code 会话通知" \
-            "Claude Code 会话已结束。你处于离开模式或空闲时间已超过阈值。" \
-            "info"
+            --subject "Claude Code 会话通知" \
+            --body "Claude Code 会话已结束。你处于离开模式或空闲时间已超过阈值。" \
+            --level "info" \
+            --config "$CONFIG_FILE"
     fi
 fi
 
