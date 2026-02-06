@@ -4,46 +4,45 @@ argument-hint: [subject] [body] [level]
 allowed-tools: Bash(python3:*), Read
 ---
 
-Send email notification using configured SMTP settings.
+You are executing a command to send an email notification. Follow these steps:
 
-**Parameters:**
-- $1 (subject): Email subject
-- $2 (body): Email body content
-- $3 (level): info|success|warning|error (default: info)
+**Step 1: Validate arguments**
 
-**Usage:**
-```
-/send-email-notification "部署完成" "生产环境已更新到v2.0" "success"
-/send-email-notification "构建失败" "请检查CI日志" "error"
-/send-email-notification "系统警告" "磁盘使用率超过90%" "warning"
-```
+You have been given:
+- $1 = subject (email subject)
+- $2 = body (email body content)
+- $3 = level (optional: info|success|warning|error, default: info)
 
-**Implementation:**
+If $1 or $2 are empty, ask the user to provide both subject and body.
 
-1. Check configuration files in order of priority:
-   - Project: `.claude/sfce-macos-notifier.local.md`
-   - User: `~/.claude/sfce-macos-notifier.local.md`
+**Step 2: Find configuration file**
 
-2. If neither exists:
-   - Check default config: `${CLAUDE_PLUGIN_ROOT}/skills/notification-integration/default-config.md`
-   - Inform user to create configuration
-   - Show configuration template
+Check configuration files in this order:
+1. Project config: `.claude/sfce-macos-notifier.local.md`
+2. User config: `~/.claude/sfce-macos-notifier.local.md`
+3. Default config: `${CLAUDE_PLUGIN_ROOT}/skills/notification-integration/default-config.md`
 
-3. Load SMTP settings from first available config file:
-   - smtp_host
-   - smtp_port
-   - smtp_user
-   - smtp_password
-   - smtp_from
-   - default_recipient
+Read the first one that exists. If none exist, inform the user:
+- Email notification requires configuration
+- Create a config file at ~/.claude/sfce-macos-notifier.local.md
+- Show them the template from the default config file
+- Then stop.
 
-4. Execute Python script with loaded config:
-```
-!python3 ${CLAUDE_PLUGIN_ROOT}/skills/notification-integration/scripts/send-email.py --subject "$1" --body "$2" --level "$3" --config /path/to/config
-```
+**Step 3: Check if email notifications are enabled**
 
-5. Report delivery status:
-   - Success: "Email sent to [recipient]"
-   - Failure: Error details from script
+From the config, check `enable_email_notification`. If it's false or not set to true:
+- Inform user that email notifications are disabled
+- Tell them to set `enable_email_notification: true` in their config
+- Then stop.
 
-**Note:** Email format is plain text. Configuration should be in YAML format.
+**Step 4: Execute the Python script**
+
+Run the email script with the loaded config:
+!python3 ${CLAUDE_PLUGIN_ROOT}/skills/notification-integration/scripts/send-email.py "$1" "$2" "$3"
+
+**Step 5: Report result**
+
+If successful: "Email sent successfully"
+If failed: Show the error message from the script
+
+That's it. Do not add additional behaviors.

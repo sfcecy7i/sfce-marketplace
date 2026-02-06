@@ -4,37 +4,35 @@ argument-hint: [title] [message] [level]
 allowed-tools: Bash(terminal-notifier:*), Read
 ---
 
-Send MacOS system notification using terminal-notifier.
+You are executing a command to send a MacOS system notification. Follow these steps:
 
-**Parameters:**
-- $1 (title): Notification title
-- $2 (message): Notification message
-- $3 (level): info|success|warning|error (default: info)
+**Step 1: Check terminal-notifier is installed**
 
-**Usage:**
-```
-/send-system-notification "任务完成" "所有测试通过" "success"
-/send-system-notification "构建失败" "请检查错误日志" "error"
-/send-system-notification "需要确认" "请在弹窗中确认" "warning"
-```
+Execute: !`which terminal-notifier`
 
-**Implementation:**
+If the command returns "NOT_FOUND" or fails, inform the user:
+- terminal-notifier is not installed
+- They need to install it: `brew install terminal-notifier`
+- Then stop.
 
-1. Check terminal-notifier availability: !`which terminal-notifier || echo "NOT_FOUND"`
+**Step 2: Validate arguments**
 
-2. If terminal-notifier not installed:
-   - Inform user they need to install it
-   - Provide installation command: `brew install terminal-notifier`
+You have been given these arguments:
+- $1 = title (notification title)
+- $2 = message (notification message)
+- $3 = level (optional: info|success|warning|error, default: info)
 
-3. If available, send notification:
-```
+If $1 or $2 are empty, ask the user to provide both title and message.
+
+**Step 3: Send the notification**
+
+Execute the notification command:
 !terminal-notifier -title "$1" -message "$2" -sound default
-```
 
-4. Map notification levels to appropriate sounds/icons:
-   - info: default sound
-   - success: default sound
-   - warning: default sound
-   - error: default sound
+**Step 4: Confirm to user**
 
-5. Confirm notification sent to user.
+After sending the notification, inform the user:
+- "Notification sent: [title]"
+- If the notification level was success/error, provide appropriate context
+
+That's it. Do not add additional features or behaviors.

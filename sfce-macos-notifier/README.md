@@ -159,17 +159,6 @@ Example:
 /send-email-notification "测试报告" "所有测试通过" "success"
 ```
 
-#### Send Both Notifications
-
-```bash
-/send-both-notifications "Title" "Message" "level"
-```
-
-Example:
-```bash
-/send-both-notifications "部署完成" "生产环境已更新到 v2.0" "success"
-```
-
 ### Notification Levels
 
 - `info`: General informational messages
@@ -284,7 +273,6 @@ After installation, these commands are available:
 
 - `/send-system-notification`: Send MacOS notification only
 - `/send-email-notification`: Send email notification only
-- `/send-both-notifications`: Send both system and email notifications
 
 ## Skills
 
@@ -303,8 +291,7 @@ sfce-macos-notifier/
 │   └── plugin.json          # Plugin manifest
 ├── commands/                 # Slash commands
 │   ├── send-system-notification.md
-│   ├── send-email-notification.md
-│   └── send-both-notifications.md
+│   └── send-email-notification.md
 ├── skills/                   # AI knowledge base
 │   ├── notification-usage/
 │   │   └── SKILL.md
